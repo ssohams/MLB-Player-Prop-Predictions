@@ -57,9 +57,22 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
 
-y_pred_proba = model.predict_proba(X_test)
 
-win_probability = y_pred_proba[:,1]
 
-print(win_probability)
-print(y_pred)
+
+
+def predict_win(team_a,team_b):
+    stats_a = team_stats[team_stats['Team'] == team_a].iloc[0]
+    stats_b = team_stats[team_stats['Team'] == team_b].iloc[0]
+    features = stats_a.tolist() + stats_b.tolist() 
+
+    match = pd.DataFrame([features],columns = columns)
+
+    match = match.drop(columns = ['TeamA_Team','TeamB_Team'])
+    win_probability = model.predict_proba(match)[:,1]
+    return win_probability[0]
+
+a = 'KC'
+b = 'NYY'
+win_probability = predict_win(a,b)
+print(f"Probability of {a} beating {b}: {win_probability}")
