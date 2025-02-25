@@ -20,7 +20,7 @@ def fetch_page(page_num):
         for row in table.find_all('tr')[1:]:
             name = [col.text.strip() for col in row.find_all('th')]
             stats = [col.text.strip() for col in row.find_all('td')]
-
+            '''
             if name:
                 name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
                 player_row = batting[batting['Player'].str.contains(name[0], case=False, regex=False)]
@@ -28,18 +28,22 @@ def fetch_page(page_num):
                 if not player_row.empty:
                     appended_row = [name[0], player_row['Team'].values[0]] + stats
                     rows.append(appended_row)
+            '''
+            name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
+            appended_row = [name[0]] + stats
+            rows.append(appended_row)
 
     return rows
 
 all_rows = []
-with ThreadPoolExecutor(max_workers=10) as executor:
+with ThreadPoolExecutor(max_workers= 8000) as executor:
     results = executor.map(fetch_page, range(page_num, max_page_num))
 
     for result in results:
         all_rows.extend(result)
 
 if all_rows:
-    df = pd.DataFrame(all_rows, columns=['Player', 'Team', 'G', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'SO', 'SB', 'CS', 'AVG', 'OBP', 'SLG', 'OPS'])
+    df = pd.DataFrame(all_rows, columns=['Player', 'G', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'SO', 'SB', 'CS', 'AVG', 'OBP', 'SLG', 'OPS'])
     df.to_csv("MLB_Career_Batting.csv", index=False)
 
 # Pitching stats scraping
@@ -58,7 +62,7 @@ def fetch_pitching_page(page_num):
         for row in table.find_all('tr')[1:]:
             name = [col.text.strip() for col in row.find_all('th')]
             stats = [col.text.strip() for col in row.find_all('td')]
-
+            '''
             if name:
                 name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
                 player_row = pitching[pitching['Player'].str.contains(name[0], case=False, regex=False)]
@@ -66,16 +70,21 @@ def fetch_pitching_page(page_num):
                 if not player_row.empty:
                     appended_row = [name[0], player_row['Team'].values[0]] + stats
                     rows.append(appended_row)
+            '''
+            name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
+            appended_row = [name[0]] + stats
+            rows.append(appended_row)
+
 
     return rows
 
 all_pitching_rows = []
-with ThreadPoolExecutor(max_workers=10) as executor:
+with ThreadPoolExecutor(max_workers= 8000 ) as executor:
     results = executor.map(fetch_pitching_page, range(page_num, max_page_num))
 
     for result in results:
         all_pitching_rows.extend(result)
 
 if all_pitching_rows:
-    dfp = pd.DataFrame(all_pitching_rows, columns=['Player', 'Team', 'W', 'L', 'ERA', 'G', 'GS', 'CG', 'SHO', 'SV', 'SVO', 'IP', 'H', 'R', 'ER', 'HR', 'HB', 'BB', 'SO', 'WHIP', 'AVG'])
+    dfp = pd.DataFrame(all_pitching_rows, columns=['Player', 'W', 'L', 'ERA', 'G', 'GS', 'CG', 'SHO', 'SV', 'SVO', 'IP', 'H', 'R', 'ER', 'HR', 'HB', 'BB', 'SO', 'WHIP', 'AVG'])
     dfp.to_csv("MLB_Career_Pitching.csv", index=False)

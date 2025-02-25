@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+import re
 url = 'https://www.mlb.com/stats/'
 
 response = requests.get(url)
@@ -18,6 +19,7 @@ while page_num < 8:
     for row in table.find_all('tr')[1:]: 
         name = [col.text.strip() for col in row.find_all('th')]
         stats = [col.text.strip() for col in row.find_all('td')]
+        name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
         appended_row = [name[0]]
         
         for stat in stats:
@@ -39,7 +41,7 @@ while page_num < 8:
 
 
 df.columns = ['Player','Team','G','AB','R','H','2B','3B','HR','RBI','BB','SO','SB','CS','AVG','OBP','SLG','OPS']
-df.to_csv("MLB_Batting.csv",index = False)
+df.to_csv("CSV_Files\MLB_Batting.csv",index = False)
 
 pitching_url = "https://www.mlb.com/stats/pitching"
 sort = "&sortState=asc"
@@ -56,6 +58,7 @@ while page_num < 5:
     for row in table.find_all('tr')[1:]: 
         name = [col.text.strip() for col in row.find_all('th')]
         stats = [col.text.strip() for col in row.find_all('td')]
+        name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
         appended_row = [name[0]]
         
         for stat in stats:
