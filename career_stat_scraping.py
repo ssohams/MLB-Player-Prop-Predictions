@@ -14,7 +14,7 @@ batting = pd.read_csv('MLB_Batting.csv')
 
 
 #print(batting[batting['Player'].str.contains('1AaronA JudgeJudge', case=False, na=False)])
-'''
+
 while page_num < 818:
     soup = BeautifulSoup(response.content,'html.parser')
 
@@ -25,15 +25,10 @@ while page_num < 818:
         name = [col.text.strip() for col in row.find_all('th')]
         stats = [col.text.strip() for col in row.find_all('td')]
         
-        if name:
-            name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
-           
-            player_row = batting[batting['Player'].str.contains(name[0], case=False, regex=False)]
-            
-            if not player_row.empty:
-                appended_row = [name[0],player_row['Team'].values[0]] + stats
-                rows.append(appended_row)
-
+        appended_row = [name[0]]
+        for stat in stats:
+            appended_row.append(stat)
+        rows.append(appended_row)
 
     if rows:
         data = pd.DataFrame(rows)
@@ -48,7 +43,7 @@ while page_num < 818:
 
 df.columns = ['Player','Team','G','AB','R','H','2B','3B','HR','RBI','BB','SO','SB','CS','AVG','OBP','SLG','OPS']
 df.to_csv("MLB_Career_Batting.csv",index = False)
-'''
+
 ##############################
 ##############################
 ##############################
@@ -76,16 +71,11 @@ while page_num < 471:
         name = [col.text.strip() for col in row.find_all('th')]
         stats = [col.text.strip() for col in row.find_all('td')]
         
-        if name:
-            name[0] = re.sub(r'[^a-zA-Z]', '', name[0])
-            
-            player_row = pitching[pitching['Player'].str.contains(name[0], case=False, regex=False)]
-            
-            if not player_row.empty:
-                appended_row = [name[0],player_row['Team'].values[0]] + stats
-                rows.append(appended_row)
-        
-        
+        appended_row = [name[0]]
+        for stat in stats:
+            appended_row.append(stat)
+        rows.append(appended_row)
+   
     if rows:
         data = pd.DataFrame(rows)
         dfp = pd.concat([dfp, data], ignore_index=True)
