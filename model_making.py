@@ -72,7 +72,7 @@ def predict_win(team_a,team_b):
     win_probability = model.predict_proba(match)[:,1]
     return win_probability[0]
 
-a = 'KC'
-b = 'NYY'
+a = 'CHC'
+b = 'LAD'
 win_probability = predict_win(a,b)
 print(f"Probability of {a} beating {b}: {win_probability}")
