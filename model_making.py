@@ -1,7 +1,7 @@
 import pandas as pd
 
-batting = pd.read_csv('MLB_Batting.csv')
-pitching = pd.read_csv('MLB_Pitching.csv')
+batting = pd.read_csv('CSV_Files\MLB_Custom_Batting.csv')
+pitching = pd.read_csv('CSV_Files\MLB_Custom_Pitching.csv')
 
 batting_team = batting.groupby('Team').agg({'G': 'sum', 'AB': 'sum', 'R': 'sum', 'H': 'sum', '2B': 'sum', '3B': 'sum', 'HR': 'sum',
     'RBI': 'sum', 'BB': 'sum', 'SO': 'sum', 'SB': 'sum', 'CS': 'sum', 'AVG': 'mean',

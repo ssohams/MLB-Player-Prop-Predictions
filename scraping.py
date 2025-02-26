@@ -76,6 +76,6 @@ while page_num < 5:
     page_num+=1
 
 pitch.columns = ["Player","Team","W","L",'ERA','G',"GS","CG","SHO","SV","SVO","IP","H","R","ER","HR","HB","BB","SO","WHIP","AVG"]
-pitch.to_csv("MLB_Pitching.csv",index = False)
+pitch.to_csv("CSV_Files\MLB_Pitching.csv",index = False)
 
 

@@ -36,7 +36,7 @@ def fetch_page(page_num):
     return rows
 
 all_rows = []
-with ThreadPoolExecutor(max_workers= 8000) as executor:
+with ThreadPoolExecutor(max_workers= 32) as executor:
     results = executor.map(fetch_page, range(page_num, max_page_num))
 
     for result in results:
@@ -44,7 +44,7 @@ with ThreadPoolExecutor(max_workers= 8000) as executor:
 
 if all_rows:
     df = pd.DataFrame(all_rows, columns=['Player', 'G', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'SO', 'SB', 'CS', 'AVG', 'OBP', 'SLG', 'OPS'])
-    df.to_csv("MLB_Career_Batting.csv", index=False)
+    df.to_csv("CSV_Files\MLB_Career_Batting.csv", index=False)
 
 # Pitching stats scraping
 p_url = "https://www.mlb.com/stats/pitching/all-time-totals"
@@ -79,7 +79,7 @@ def fetch_pitching_page(page_num):
     return rows
 
 all_pitching_rows = []
-with ThreadPoolExecutor(max_workers= 8000 ) as executor:
+with ThreadPoolExecutor(max_workers= 32 ) as executor:
     results = executor.map(fetch_pitching_page, range(page_num, max_page_num))
 
     for result in results:
@@ -87,4 +87,4 @@ with ThreadPoolExecutor(max_workers= 8000 ) as executor:
 
 if all_pitching_rows:
     dfp = pd.DataFrame(all_pitching_rows, columns=['Player', 'W', 'L', 'ERA', 'G', 'GS', 'CG', 'SHO', 'SV', 'SVO', 'IP', 'H', 'R', 'ER', 'HR', 'HB', 'BB', 'SO', 'WHIP', 'AVG'])
-    dfp.to_csv("MLB_Career_Pitching.csv", index=False)
+    dfp.to_csv("CSV_Files\MLB_Career_Pitching.csv", index=False)
