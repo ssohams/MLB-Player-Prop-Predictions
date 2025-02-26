@@ -9,7 +9,8 @@ response = requests.get(url)
 page = "?page="
 page_num = 2
 df = pd.DataFrame()
-while page_num < 8:
+content = True
+while content:
 
     soup = BeautifulSoup(response.content,'html.parser')
 
@@ -33,6 +34,8 @@ while page_num < 8:
     response = requests.get(url+page+str(page_num))
     
     page_num+=1
+    if len(rows2) == 0:
+        content = False
 
     
 
@@ -48,8 +51,8 @@ sort = "&sortState=asc"
 page_num = 1
 
 pitch = pd.DataFrame()
-
-while page_num < 5:
+content = True
+while content:
     soup = BeautifulSoup(response.content,'html.parser')
 
     table = soup.find('table')
@@ -71,9 +74,11 @@ while page_num < 5:
     
     pitch = pd.concat([pitch, new_data], ignore_index=True)
 
-    response = requests.get(pitching_url + page + str(page_num) + sort)
+    response = requests.get(pitching_url + page + str(page_num))
     
     page_num+=1
+    if page_num != 2 and len(rows2) == 0:
+        content = False
 
 pitch.columns = ["Player","Team","W","L",'ERA','G',"GS","CG","SHO","SV","SVO","IP","H","R","ER","HR","HB","BB","SO","WHIP","AVG"]
 pitch.to_csv("CSV_Files\MLB_Pitching.csv",index = False)

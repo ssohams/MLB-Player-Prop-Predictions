@@ -4,11 +4,13 @@ import pandas as pd
 import re
 from concurrent.futures import ThreadPoolExecutor
 
+MAX_BATTING_NUM = 879
+MAX_PITCHING_NUM = 469
 url = 'https://www.mlb.com/stats/all-time-totals'
 page = "?page="
 page_num = 2
-max_page_num = 818
-batting = pd.read_csv('MLB_Batting.csv')
+
+
 
 def fetch_page(page_num):
     response = requests.get(url + page + str(page_num))
@@ -37,7 +39,7 @@ def fetch_page(page_num):
 
 all_rows = []
 with ThreadPoolExecutor(max_workers= 32) as executor:
-    results = executor.map(fetch_page, range(page_num, max_page_num))
+    results = executor.map(fetch_page, range(page_num, MAX_BATTING_NUM))
 
     for result in results:
         all_rows.extend(result)
@@ -49,8 +51,8 @@ if all_rows:
 # Pitching stats scraping
 p_url = "https://www.mlb.com/stats/pitching/all-time-totals"
 page_num = 2
-max_page_num = 471
-pitching = pd.read_csv('MLB_Pitching.csv')
+
+
 
 def fetch_pitching_page(page_num):
     response = requests.get(p_url + page + str(page_num))
@@ -80,7 +82,7 @@ def fetch_pitching_page(page_num):
 
 all_pitching_rows = []
 with ThreadPoolExecutor(max_workers= 32 ) as executor:
-    results = executor.map(fetch_pitching_page, range(page_num, max_page_num))
+    results = executor.map(fetch_pitching_page, range(page_num, MAX_PITCHING_NUM))
 
     for result in results:
         all_pitching_rows.extend(result)

@@ -2,9 +2,9 @@ import pandas as pd
 
 batting = pd.read_csv('CSV_Files\MLB_Custom_Batting.csv')
 pitching = pd.read_csv('CSV_Files\MLB_Custom_Pitching.csv')
-
+batting.drop(columns = ['CS'])
 batting_team = batting.groupby('Team').agg({'G': 'sum', 'AB': 'sum', 'R': 'sum', 'H': 'sum', '2B': 'sum', '3B': 'sum', 'HR': 'sum',
-    'RBI': 'sum', 'BB': 'sum', 'SO': 'sum', 'SB': 'sum', 'CS': 'sum', 'AVG': 'mean',
+    'RBI': 'sum', 'BB': 'sum', 'SO': 'sum', 'SB': 'sum', 'AVG': 'mean',
     'OBP': 'mean', 'SLG': 'mean', 'OPS': 'mean'
 }).reset_index()
 
@@ -15,7 +15,7 @@ pitching_team = pitching.groupby('Team').agg({
 }).reset_index()
 
 team_stats = pd.merge(batting_team, pitching_team, on = 'Team')
-
+team_stats.to_csv("team_stats.csv",index = False)
 matchups = []
 teams = team_stats['Team'].unique()
 
@@ -47,9 +47,11 @@ y = matchup_df['Target']
 X.to_csv('X')
 y.to_csv('y')
 
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.8,random_state=12)
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.2,random_state=12)
+X_train.to_csv('X_train')
+y_train.to_csv('y_train')
 
-model = RandomForestClassifier(random_state=12)
+model = RandomForestClassifier(random_state=12) 
 model.fit(X_train,y_train)
 
 y_pred = model.predict(X_test)
@@ -71,8 +73,27 @@ def predict_win(team_a,team_b):
     match = match.drop(columns = ['TeamA_Team','TeamB_Team'])
     win_probability = model.predict_proba(match)[:,1]
     return win_probability[0]
-
-a = 'CHC'
-b = 'LAD'
+'''
+a = 'SLC'
+b = 'NYY'
 win_probability = predict_win(a,b)
+bwin_probability = predict_win(b,a)
 print(f"Probability of {a} beating {b}: {win_probability}")
+print(f"Probability of {b} beating {a}: {bwin_probability}")
+
+'''
+a = ['MIN','STL','TB','PHI','CHC','SD']
+b = ['DET','NYY','BOS','TOR','SF','CWS']
+for i in range(len(a)):
+    ta = a[i]
+    tb = b[i]
+    win_probability = predict_win(ta,tb)
+    bwin_probability = predict_win(tb,ta)
+    print(f"Probability of {ta} beating {tb}: {win_probability}")
+    print(f"Probability of {tb} beating {ta}: {bwin_probability}")
+    print("*****\n*****")
+
+
+
+
+
