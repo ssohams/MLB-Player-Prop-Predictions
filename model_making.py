@@ -15,7 +15,7 @@ pitching_team = pitching.groupby('Team').agg({
 }).reset_index()
 
 team_stats = pd.merge(batting_team, pitching_team, on = 'Team')
-team_stats.to_csv("team_stats.csv",index = False)
+
 matchups = []
 teams = team_stats['Team'].unique()
 
@@ -44,12 +44,10 @@ from sklearn.metrics import accuracy_score, classification_report
 X = matchup_df.drop(columns=['Target', 'TeamA_Team', 'TeamB_Team'])
 y = matchup_df['Target']
 
-X.to_csv('X')
-y.to_csv('y')
+
 
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.2,random_state=12)
-X_train.to_csv('X_train')
-y_train.to_csv('y_train')
+
 
 model = RandomForestClassifier(random_state=12) 
 model.fit(X_train,y_train)
